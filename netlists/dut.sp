@@ -1,0 +1,6 @@
+rb_down1 vee base 10k
+Q2 coll base vee bc546b
+cin1 in base 10u
+rb_up1 base vcc 68k
+cout2 coll out 10u
+rc3 coll vcc 10k
