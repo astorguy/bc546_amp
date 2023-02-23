@@ -2,6 +2,7 @@
 /*-backups
 *.kicad_pcb
 *.kicad_prl
+/schematics/bc546_amp/bc546_amp-backups/*
 
 # Ngspice
 /result/*
@@ -10,4 +11,3 @@
 /__pycache__
 /.mypy_cache
 /ngspicehlp
-schematics/bc546_amp/bc546_amp-backups/bc546_amp-2023-02-12_160001.zip
