@@ -41,7 +41,7 @@ The organization of the example provides a structured simulation platform enabli
 This separates functionality into different files. The file named `dut.sp` represents the *design-under-test (DUT)*.
 
 2. The KiCad schematic represents the DUT.
-2. Before running the script change to the `bc546-main/python` directory. Open the script file `ngspice_proj.py` with the text editor of your choice. Near the beginning of the file are three variables that must be set for your unique environment. They are:
+2. Before running the script change to the `bc546_amp-main/python` directory. Open the script file `ngspice_proj.py` with the text editor of your choice. Near the beginning of the file are three variables that must be set for your unique environment. They are:
 * The full path to `kicad-cli.exe`
 * The full path to `ngspice_con.exe`
 * The full path to the `bc549_amp-main` project
