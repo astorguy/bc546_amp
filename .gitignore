@@ -4,10 +4,6 @@
 *.kicad_prl
 /schematics/bc546_amp/bc546_amp-backups/*
 
-# Ngspice
-/result/*
-
 # Python
 /__pycache__
 /.mypy_cache
-/ngspicehlp
