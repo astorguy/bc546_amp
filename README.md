@@ -12,14 +12,14 @@ An ngspice example of a bipolar amplifer using the Ngspice Helper package: [ngsp
 
 `python -m pip install git+https://github.com/astorguy/ngspicehlp_project`
 
-3. Change to `bc546_amp/python` directory
+3. Change to `bc546_amp-main/python` directory
 3. Using a text editor modify the main program: `ngspice_proj.py`
 5. Set the locations of the ngspice console executable, the KiCad CLI, and the path to the project. These variable are defined near the beginning of `ngspice_proj.py`
 
 ```
 NGSPICE_EXE = Path("c:/Program Files/ngspice_39/bin/ngspice_con.exe")
 KICAD_EXE = Path("c:/Program Files/KiCad/7.0/bin/kicad-cli.exe")
-PROJECT_PATH_ABS = Path("c:/bc546_amp")
+PROJECT_PATH_ABS = Path("c:/bc546_amp-main")
 ```
 
 # Explanatory
@@ -41,10 +41,10 @@ The organization of the example provides a structured simulation platform enabli
 This separates functionality into different files. The file named `dut.sp` represents the *design-under-test (DUT)*.
 
 2. The KiCad schematic represents the DUT.
-2. Before running the script change to the `BC546_AMP/python` directory. Open the script file `ngspice_proj.py` with the text editor of your choice. Near the beginning of the file are three variables that must be set for your unique environment. They are:
+2. Before running the script change to the `bc546-main/python` directory. Open the script file `ngspice_proj.py` with the text editor of your choice. Near the beginning of the file are three variables that must be set for your unique environment. They are:
 * The full path to `kicad-cli.exe`
 * The full path to `ngspice_con.exe`
-* The full path to the `bc549_amp` project
+* The full path to the `bc549_amp-main` project
 4. You can run the script from a terminal: `python ./ngpsice_proj.py`
 4. The first thing the script does is extract and condition a netlist from the KiCad schematic.
 4. Next, the analyses for the simulation are defined. For this example, there are four analyses (op, dt, tr, ac).
