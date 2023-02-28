@@ -8,9 +8,9 @@ An ngspice example of a bipolar amplifer using the Ngspice Helper package: [ngsp
 
 # Setup Instructions
 1. Download the project to the location of your choice.
-1. Install ngspicehlp:
+1. Install ngspicehlp from PyPI:
 
-`python -m pip install git+https://github.com/astorguy/ngspicehlp_project`
+`python -m pip install --upgrade ngspicehlp`
 
 3. Change to `bc546_amp-main/python` directory
 3. Using a text editor modify the main program: `ngspice_proj.py`
