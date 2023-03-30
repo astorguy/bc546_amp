@@ -3,12 +3,12 @@
 import os
 from pathlib import Path
 import pandas as pd
-import ngspicehlp as ng
+import py4spice as spi
 
 # set constants and directories
 NGSPICE_EXE = Path("c:/Program Files/ngspice_39/bin/ngspice_con.exe")
 KICAD_EXE = Path("c:/Program Files/KiCad/7.0/bin/kicad-cli.exe")
-PROJECT_PATH_ABS = Path("c:/bc546_amp-main")
+PROJECT_PATH_ABS = Path("G:/My Drive/_TechSharpen/KiCad/projects/bc546_amp2")
 
 # Create a relative path to the project directory
 PROGRAM_PATH = Path(os.curdir)
@@ -30,13 +30,13 @@ CONTROL_FILENAME = NETLISTS_PATH_REL / CONTROL
 DUT = "dut.sp"
 
 # define vectors ("signals") to look at
-VEC_ALL = ng.Vectors(["all"])
-VEC_NODES = ng.Vectors(["in", "out", "base", "coll"])
-VEC_IN_OUT = ng.Vectors(["in", "out"])
-VEC_OUT_DB_PH = ng.Vectors(["vdb(out)", "vp(out)"])
-VEC_OUT_DB = ng.Vectors(["vdb(out)"])
-VEC_OUT_PH = ng.Vectors(["vp(out)"])
-VEC_BASE_COL = ng.Vectors(["base", "coll"])
+VEC_ALL = spi.Vectors("all")
+VEC_NODES = spi.Vectors("in out base coll")
+VEC_IN_OUT = spi.Vectors(["in", "out"])
+VEC_OUT_DB_PH = spi.Vectors(["vdb(out)", "vp(out)"])
+VEC_OUT_DB = spi.Vectors(["vdb(out)"])
+VEC_OUT_PH = spi.Vectors(["vp(out)"])
+VEC_BASE_COL = spi.Vectors(["base", "coll"])
 
 
 def kicad_netlist() -> None:
@@ -44,67 +44,78 @@ def kicad_netlist() -> None:
     remove forward slashes from node names.
     """
     # extract netlist from schematic into dir with schematic
-    netlist_extract = ng.KicadCmd(KICAD_EXE, KICAD_SCH_FILENAME, KICAD_NETLIST_FILENAME)
-    ng.print_section("KiCad Export Netlist Command", netlist_extract)
+    netlist_extract = spi.KicadCmd(
+        KICAD_EXE, KICAD_SCH_FILENAME, KICAD_NETLIST_FILENAME
+    )
+    spi.print_section("KiCad Export Netlist Command", netlist_extract)
     netlist_extract.run()
 
-    # print extracted KiCad netlist
-    ng.print_section("KiCad Netlist", netlist_extract)
-
     # convert Kicad spice netlist and move to netlist directory
-    my_dut = ng.Netlist(KICAD_NETLIST_FILENAME)
+    my_dut = spi.Netlist(KICAD_NETLIST_FILENAME)
     my_dut.remove_first_last_lines()
     my_dut.remove_forwardslashes()
     my_dut.writefile(NETLISTS_PATH_REL / DUT)
 
     # print to check netlist content
-    ng.print_section("DUT Netlist", my_dut)
+    spi.print_section("DUT Netlist", my_dut)
 
 
-def define_analyses() -> list[ng.Analyses]:
-    """define the analyses to execute during simulation"""
+def define_analyses() -> list[spi.Analyses]:
+    """define all the analyses to simulate
+
+    Returns:
+        list[spi.Analyses]: list of analyses
+    """
+    NgCmd = list[str | int | float]  # type definition
+
+    list_of_analyses: list[spi.Analyses] = []
+
     # 1st analysis
-    op_cmd = ["op"]
-    op1 = ng.Analyses("op1", op_cmd, VEC_ALL, RESULTS_PATH_REL)
+    op_cmd: NgCmd = ["op"]
+    op1 = spi.Analyses("op1", "op", op_cmd, VEC_ALL, RESULTS_PATH_REL)
+    list_of_analyses.append(op1)
 
     # 2nd analysis
-    dc_cmd = ["dc", "vcc", 0, 5, 0.25]
-    dc1 = ng.Analyses("dc1", dc_cmd, VEC_ALL, RESULTS_PATH_REL)
+    dc_cmd: NgCmd = ["dc", "vcc", 0, 5, 0.25]
+    dc1 = spi.Analyses("dc1", "dc", dc_cmd, VEC_ALL, RESULTS_PATH_REL)
+    list_of_analyses.append(dc1)
 
     # 3rd analysis
-    tr_cmd = ["tran", 10e-6, 10e-3]
-    tr1 = ng.Analyses("tr1", tr_cmd, VEC_ALL, RESULTS_PATH_REL)
+    tr_cmd: NgCmd = ["tran", 10e-6, 10e-3]
+    tr1 = spi.Analyses("tr1", "tr", tr_cmd, VEC_ALL, RESULTS_PATH_REL)
+    list_of_analyses.append(tr1)
 
     # 4th analysis
-    ac_cmd = ["ac", "dec", 10, 10, 1e6]
-    ac1 = ng.Analyses("ac1", ac_cmd, VEC_OUT_DB_PH, RESULTS_PATH_REL)
+    ac_cmd: NgCmd = ["ac", "dec", 10, 10, 1e6]
+    ac1 = spi.Analyses("ac1", "ac", ac_cmd, VEC_OUT_DB_PH, RESULTS_PATH_REL)
+    list_of_analyses.append(ac1)
 
-    return [op1, dc1, tr1, ac1]
+    return list_of_analyses
 
 
 def plot_dc_transfer(sim_result: pd.DataFrame) -> None:
     """plot dc tranfer results"""
-    plt_dt = ng.Plot("dt", sim_result, VEC_BASE_COL, RESULTS_PATH_REL)
+    plt_dt = spi.Plot("dt", sim_result, VEC_BASE_COL, RESULTS_PATH_REL)
     plt_dt.set_title("sweeping dc value of vcc")
     plt_dt.define_axes(("voltage", "V", "linear"), ("voltage", "V", "linear"))
 
 
 def plot_tr(sim_result: pd.DataFrame) -> None:
     """plot tranisent results"""
-    plt_tr = ng.Plot("tran", sim_result, VEC_IN_OUT, RESULTS_PATH_REL)
+    plt_tr = spi.Plot("tran", sim_result, VEC_IN_OUT, RESULTS_PATH_REL)
     plt_tr.set_title("transient results")
     plt_tr.define_axes(("time", "sec", "linear"), ("voltage", "V", "linear"))
 
 
 def plot_ac(sim_result: pd.DataFrame) -> None:
     """plot ac results"""
-    plt_ac = ng.Plot("ac", sim_result, VEC_OUT_DB, RESULTS_PATH_REL)
+    plt_ac = spi.Plot("ac", sim_result, VEC_OUT_DB, RESULTS_PATH_REL)
     plt_ac.set_title("ac analysis gain (db)")
     plt_ac.define_axes(("freq", "Hz", "log"), ("voltage", "db", "linear"))
     plt_ac.axe.grid(which="major", color="lime", linewidth=1.2)
     plt_ac.axe.grid(which="minor", color="gold")
 
-    plt_ac = ng.Plot("ac", sim_result, VEC_OUT_PH, RESULTS_PATH_REL)
+    plt_ac = spi.Plot("ac", sim_result, VEC_OUT_PH, RESULTS_PATH_REL)
     plt_ac.set_title("ac analysis phase (radians")
     plt_ac.define_axes(("freq", "Hz", "log"), ("phase", "rad", "linear"))
     plt_ac.axe.grid(which="major", color="lime", linewidth=1.2)
@@ -117,31 +128,38 @@ def main() -> None:
     # create netlist from KiCad
     kicad_netlist()
 
-    # define analyses to run during simulation
-    my_analyses: list[ng.Analyses] = define_analyses()
+    # define my analyses to run
+    my_analyses: list[spi.Analyses] = define_analyses()
 
-    # initialize control file object. (but not yet written to file)
-    my_control = ng.Control(CONTROL_FILENAME)
+    # construct the control file
+    my_control = spi.Control()
     my_control.insert_lines(["listing"])  # cmd to list out netlist
-    ng.print_section("Control File", my_control)  # print out control file
+    for analysis in my_analyses:
+        my_control.insert_lines(analysis.lines_for_cntl())
+    spi.print_section("Control File", my_control)  # print out contents
+    my_control.content_to_file(CONTROL_FILENAME)
 
-    # prepare simulate object. This includes writing control object to file
-    sim1 = ng.Simulate(NGSPICE_EXE, TOP_FILENAME, my_control, my_analyses)
-    ng.print_section("Ngspice Command", sim1)
-    sim1.run()  # run the ngspice simulation
+    # prepare simulate object, print out command, and simulate
+    sim1 = spi.Simulate(NGSPICE_EXE, TOP_FILENAME)
+    spi.print_section("Ngspice Command", sim1)
+    sim1.run()
 
     # convert results to list of Pandas DFs: one DF for each analysis run
     # "True" for deleting ngspice result files after conversion to Pandas DF
-    sim_results = ng.to_pandas(RESULTS_PATH_REL, my_analyses, True)
+    sim_results = [
+        spi.to_pandas(RESULTS_PATH_REL, analysis.name, analysis.cmd_type, True)
+        for analysis in my_analyses
+    ]
 
-    ng.print_section(
-        "Operating Point Results", sim_results[0]
-    )  # print operating point (op) results
+    # Print out the operating point
+    spi.print_section("Operating Point Results", sim_results[0])
+
+    # create Matplotlib plots for dc transfer, tran, and AC analyses
     plot_dc_transfer(sim_results[1])
     plot_tr(sim_results[2])
     plot_ac(sim_results[3])
 
-    ng.display_plots()  # display ALL plots
+    spi.display_plots()  # display ALL plots
 
 
 if __name__ == "__main__":

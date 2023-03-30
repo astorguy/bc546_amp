@@ -1,16 +1,16 @@
-# Ngspice example using ngspicehlp package
-An ngspice example of a bipolar amplifer using the Ngspice Helper package: [ngspicehlp](https://github.com/astorguy/ngspicehlp_project)
+# Ngspice example using py4spice package
+An ngspice example of a bipolar amplifer using the Python for Spice package: [ngspicehlp](https://github.com/astorguy/py4spice)
 
 # Requirements
 * KiCad 7.0 or greater
 * Python 3.11 or greater
-* ngspicehlp module
+* py4spice module
 
 # Setup Instructions
 1. Download the project to the location of your choice.
 1. Install ngspicehlp from PyPI:
 
-`python -m pip install --upgrade ngspicehlp`
+`python -m pip install --upgrade py4spice`
 
 3. Change to `bc546_amp-main/python` directory
 3. Using a text editor modify the main program: `ngspice_proj.py`
