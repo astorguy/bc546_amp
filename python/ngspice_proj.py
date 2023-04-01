@@ -132,12 +132,12 @@ def main() -> None:
     my_analyses: list[spi.Analyses] = define_analyses()
 
     # construct the control file
-    my_control = spi.Control()
+    my_control = spi.Control()  # create 'my_control' object
     my_control.insert_lines(["listing"])  # cmd to list out netlist
-    for analysis in my_analyses:
+    for analysis in my_analyses:  # statements for all analyses
         my_control.insert_lines(analysis.lines_for_cntl())
     spi.print_section("Control File", my_control)  # print out contents
-    my_control.content_to_file(CONTROL_FILENAME)
+    my_control.content_to_file(CONTROL_FILENAME)  # creat the actual file
 
     # prepare simulate object, print out command, and simulate
     sim1 = spi.Simulate(NGSPICE_EXE, TOP_FILENAME)
