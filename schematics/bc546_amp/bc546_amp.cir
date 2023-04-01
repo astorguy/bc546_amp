@@ -1,4 +1,4 @@
-KiCad schematic
+.title KiCad schematic
 rb_down1 vee /base 10k
 Q2 /coll /base vee bc546b   
 cin1 in /base 10u

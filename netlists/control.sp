@@ -1,5 +1,5 @@
 .control
-* Timestamp: Thu Feb 23 14:58:55 2023
+* Timestamp: Fri Mar 31 17:05:33 2023
 set wr_singlescale  $ makes one x-axis for wrdata
 set wr_vecnames     $ puts names at top of columns
 listing

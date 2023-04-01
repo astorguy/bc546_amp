@@ -8,7 +8,7 @@ import py4spice as spi
 # set constants and directories
 NGSPICE_EXE = Path("c:/Program Files/ngspice_39/bin/ngspice_con.exe")
 KICAD_EXE = Path("c:/Program Files/KiCad/7.0/bin/kicad-cli.exe")
-PROJECT_PATH_ABS = Path("G:/My Drive/_TechSharpen/KiCad/projects/bc546_amp2")
+PROJECT_PATH_ABS = Path("G:/My Drive/_TechSharpen/KiCad/projects/bc546_amp")
 
 # Create a relative path to the project directory
 PROGRAM_PATH = Path(os.curdir)
