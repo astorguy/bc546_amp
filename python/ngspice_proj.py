@@ -6,7 +6,7 @@ import pandas as pd
 import py4spice as spi
 
 # set constants and directories
-NGSPICE_EXE = Path("c:/Program Files/ngspice_39/bin/ngspice_con.exe")
+NGSPICE_EXE = Path("c:/Program Files/ngspice_40/bin/ngspice_con.exe")
 KICAD_EXE = Path("c:/Program Files/KiCad/7.0/bin/kicad-cli.exe")
 PROJECT_PATH_ABS = Path("G:/My Drive/_TechSharpen/KiCad/projects/bc546_amp")
 
